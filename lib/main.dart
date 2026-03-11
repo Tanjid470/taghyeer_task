@@ -23,6 +23,7 @@ import 'presentation/auth/bloc/auth_state.dart';
 import 'presentation/auth/screens/login_screen.dart';
 import 'presentation/home/screens/home_screen.dart';
 import 'presentation/settings/cubit/theme_cubit.dart';
+import 'services/connectivity_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,12 +31,34 @@ void main() async {
   runApp(MyApp(prefs: prefs));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final SharedPreferences prefs;
   const MyApp({super.key, required this.prefs});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final ConnectivityService _connectivityService;
+
+  @override
+  void initState() {
+    super.initState();
+    _connectivityService = ConnectivityService(navigatorKey: appNavigatorKey);
+    _connectivityService.init();
+  }
+
+  @override
+  void dispose() {
+    _connectivityService.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final prefs = widget.prefs;
+
     final apiClient = ApiClient(client: http.Client());
 
     final authLocalDs = AuthLocalDataSourceImpl(prefs);
@@ -70,6 +93,7 @@ class MyApp extends StatelessWidget {
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp(
+            navigatorKey: appNavigatorKey,
             title: 'Taghyeer App',
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
