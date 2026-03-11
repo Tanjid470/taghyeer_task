@@ -2,6 +2,10 @@
 
 A Flutter application demonstrating Clean Architecture with BLoC state management. The app fetches and displays products and posts from remote APIs, with local caching and user authentication.
 
+
+### [⬇️ Download APK](https://github.com/Tanjid470/taghyeer_task/releases/download/release/app-release.apk)
+
+
 ## Features
 
 - **User Authentication** - Login/logout functionality with local caching
